@@ -10,11 +10,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         app_label = 'core'
 
     email = models.EmailField(unique=True)
+    name = models.CharField(max_length=20)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
-    is_deleted = models.BooleanField(default=False)
+    deleted = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
