@@ -20,7 +20,7 @@ UserModel: User = get_user_model()
 class UserListCreateView(ListCreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = UserSerializer
-    queryset = UserModel.objects.all()
+    queryset = UserModel.objects.all().filter(deleted=False)
 
 
 class UserRetrieveUpdateSoftDeleteView(RetrieveUpdateAPIView):
