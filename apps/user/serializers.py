@@ -35,3 +35,15 @@ class UserChangePasswordSerializer(UserSerializer):
         extra_kwargs = {
             'password': {'write_only': True}
         }
+
+
+# serializer for sending mail with credentials and link with changing password
+# class UserStartChangePasswordSerializer(UserSerializer):
+#     class Meta:
+#         model = UserModel
+#         fields = ('id', 'name', 'email')
+#
+#     def get(self, validated_data):
+#         user = UserModel.objects.get()
+#         MailService.change_password_mail_sender(user.id, user.email)
+#         return user

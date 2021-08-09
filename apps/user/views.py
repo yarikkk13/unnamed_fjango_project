@@ -8,7 +8,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .serializers import UserChangePasswordSerializer, UserSerializer, UserUpdateSerializer
+from .serializers import (  # UserStartChangePasswordSerializer,
+    UserChangePasswordSerializer,
+    UserSerializer,
+    UserUpdateSerializer,
+)
 
 UserModel: User = get_user_model()
 
@@ -46,9 +50,11 @@ class UserChangePasswordView(UpdateAPIView):
         instance.set_password(instance.password)
         instance.save()
 
-
+# start changing View
 class UserStartChangePasswordView(TokenObtainPairView):
     permission_classes = (AllowAny,)
+    # serializer_class = UserStartChangePasswordSerializer
+    
 
 
 class UserActivatorView(APIView):
