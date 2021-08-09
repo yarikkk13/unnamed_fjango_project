@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, UpdateAPIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -20,7 +20,7 @@ class UserListCreateView(ListCreateAPIView):
 
 
 class UserRetrieveUpdateSoftDeleteView(RetrieveUpdateAPIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = UserUpdateSerializer
     queryset = UserModel.objects.all()
 
@@ -38,7 +38,7 @@ class UserRetrieveUpdateSoftDeleteView(RetrieveUpdateAPIView):
 
 class UserChangePasswordView(UpdateAPIView):
     serializer_class = UserChangePasswordSerializer
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
     queryset = UserModel.objects.all()
 
     def perform_update(self, serializer):
