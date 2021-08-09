@@ -18,10 +18,21 @@ class UserListCreateView(ListCreateAPIView):
     queryset = UserModel.objects.all()
 
 
-class UserRetrUpdView(RetrieveUpdateAPIView):
+class UserRetrieveUpdateSoftDeleteView(RetrieveUpdateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = UserUpdateSerializer
     queryset = UserModel.objects.all()
+
+    def delete(self, *args, **kwargs):
+        pk = kwargs.get('pk')
+        try:
+            data = UserModel.objects.get(pk=pk)
+        except Exception:
+            return Response('Not Found', status.HTTP_404_NOT_FOUND)
+        data.is_active = False
+        data.deleted = True
+        data.save()
+        return Response('deleted', status.HTTP_204_NO_CONTENT)
 
 
 class UserChangePasswordView(UpdateAPIView):
@@ -35,21 +46,6 @@ class UserChangePasswordView(UpdateAPIView):
         instance.save()
 
 
-class DeleteView(APIView):
-    permission_classes = (AllowAny,)
-
-    def delete(self, *args, **kwargs):
-        pk = kwargs.get('pk')
-        try:
-            data = UserModel.objects.get(pk=pk)
-        except Exception as e:
-            return Response('Not Found', status.HTTP_404_NOT_FOUND)
-        data.is_active = False
-        data.deleted = True
-        data.save()
-        return Response('deleted', status.HTTP_204_NO_CONTENT)
-
-
 class UserActivatorView(APIView):
     permission_classes = (AllowAny,)
 
@@ -57,8 +53,8 @@ class UserActivatorView(APIView):
         pk = kwargs.get('pk')
         try:
             data = UserModel.objects.get(pk=pk)
-        except Exception as e:
+        except Exception:
             return Response('Not Found', status.HTTP_404_NOT_FOUND)
-        data.is_active = False
+        data.is_active = True
         data.save()
         return Response('activated', status.HTTP_202_ACCEPTED)
