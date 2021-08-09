@@ -18,5 +18,10 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = UserModel.objects.create_user(**validated_data)
-        MailService.register_mail_sender(user.name, user.email)
+        # MailService.register_mail_sender(user.name, user.email)
         return user
+
+class UserUpdateSerializer(UserSerializer):
+    class Meta:
+        model = UserModel
+        fields = ('id', 'email', 'name')
