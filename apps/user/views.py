@@ -48,3 +48,17 @@ class DeleteView(APIView):
         data.deleted = True
         data.save()
         return Response('deleted', status.HTTP_204_NO_CONTENT)
+
+
+class UserActivatorView(APIView):
+    permission_classes = (AllowAny,)
+
+    def patch(self, *args, **kwargs):
+        pk = kwargs.get('pk')
+        try:
+            data = UserModel.objects.get(pk=pk)
+        except Exception as e:
+            return Response('Not Found', status.HTTP_404_NOT_FOUND)
+        data.is_active = False
+        data.save()
+        return Response('activated', status.HTTP_202_ACCEPTED)
