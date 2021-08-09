@@ -21,7 +21,17 @@ class UserSerializer(serializers.ModelSerializer):
         # MailService.register_mail_sender(user.name, user.email)
         return user
 
+
 class UserUpdateSerializer(UserSerializer):
     class Meta:
         model = UserModel
         fields = ('id', 'email', 'name')
+
+
+class UserChangePasswordSerializer(UserSerializer):
+    class Meta:
+        model = UserModel
+        fields = ('password', 'id')
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }

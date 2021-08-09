@@ -2,12 +2,12 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 
 from rest_framework import status
-from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, RetrieveUpdateAPIView, UpdateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import UserSerializer, UserUpdateSerializer
+from .serializers import UserChangePasswordSerializer, UserSerializer, UserUpdateSerializer
 
 UserModel: User = get_user_model()
 
@@ -24,16 +24,18 @@ class UserRetrUpdView(RetrieveUpdateAPIView):
     queryset = UserModel.objects.all()
 
 
-class DeleteView(APIView):
-    # def get(self, *args, **kwargs):
-    #     pk = kwargs.get('pk')
-    #     try:
-    #         data = CarModel.objects.get(pk=pk)
-    #     except Exception as e:
-    #         return Response('Not Found')
-    #     serializer = CarSerializer(data)
-    #     return Response(serializer.data)
+class UserChangePasswordView(UpdateAPIView):
+    serializer_class = UserChangePasswordSerializer
+    permission_classes = (AllowAny,)
+    queryset = UserModel.objects.all()
 
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        instance.set_password(instance.password)
+        instance.save()
+
+
+class DeleteView(APIView):
     permission_classes = (AllowAny,)
 
     def delete(self, *args, **kwargs):
