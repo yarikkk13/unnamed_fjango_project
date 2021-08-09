@@ -50,12 +50,6 @@ class UserChangePasswordView(UpdateAPIView):
         instance.set_password(instance.password)
         instance.save()
 
-# start changing View
-class UserStartChangePasswordView(TokenObtainPairView):
-    permission_classes = (AllowAny,)
-    # serializer_class = UserStartChangePasswordSerializer
-    
-
 
 class UserActivatorView(APIView):
     permission_classes = (AllowAny,)
@@ -69,3 +63,9 @@ class UserActivatorView(APIView):
         data.is_active = True
         data.save()
         return Response('activated', status.HTTP_202_ACCEPTED)
+
+
+# start changing View
+class UserStartChangePasswordView(TokenObtainPairView):
+    permission_classes = (AllowAny,)
+    # serializer_class = UserStartChangePasswordSerializer
