@@ -20,7 +20,7 @@ UserModel: User = get_user_model()
 class UserListCreateView(ListCreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = UserSerializer
-    queryset = UserModel.objects.all().filter(deleted=False)
+    queryset = UserModel.objects.filter(deleted=False)
 
 
 class UserRetrieveUpdateSoftDeleteView(RetrieveUpdateAPIView):
@@ -33,6 +33,8 @@ class UserRetrieveUpdateSoftDeleteView(RetrieveUpdateAPIView):
         try:
             data = UserModel.objects.get(pk=pk)
         except Exception:
+        # except UserModel.DoesNotExist:
+            # CustomUser matching query does not exist.
             return Response('Not Found', status.HTTP_404_NOT_FOUND)
         data.is_active = False
         data.deleted = True
@@ -59,6 +61,8 @@ class UserActivatorView(APIView):
         try:
             data = UserModel.objects.get(pk=pk)
         except Exception:
+        # except UserModel.DoesNotExist:
+            # CustomUser matching query does not exist.
             return Response('Not Found', status.HTTP_404_NOT_FOUND)
         data.is_active = True
         data.save()
